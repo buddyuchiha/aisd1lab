@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <cstdlib> // Библиотека была подключена для реализации рандомного заполнения множества
 
 
 template <typename T>
@@ -11,7 +12,23 @@ public:
 		elements = nullptr;
 		size = 0;
 	}
-	
+
+	Set(const T*values, int NumValues) {
+		elements = new T[NumValues];
+		for (int i = 0; i < NumValues, i++) {
+			elements[i] = values[i];
+		}
+		size = numValues; 
+	}
+
+	Set(int numValues, const T& min, const T& max) {
+		elements = new T[numValues];
+		for (int i = 0; i < NumValues, i++) {
+			elements[i] = rand() % (max - min + 1) + min;
+		}
+		size = numValues;
+	}
+
 	~Set() {
 		delete[] elements;
 	}
