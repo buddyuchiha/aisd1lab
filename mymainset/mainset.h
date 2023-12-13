@@ -5,6 +5,10 @@
 using namespace std;
 
 namespace mainset {
+    std::ostream& operator<<(std::ostream& os, const std::pair<int, double>& pair) {
+        os << "(" << pair.first << ", " << pair.second << ")";
+        return os;
+    }
     template <typename T>
     class Set {
     private:
@@ -72,7 +76,7 @@ namespace mainset {
                 size--;
             }
         }
-        void PrintSet() const {
+        void PrintSet() const{
             for (int i = 0; i < size; i++) {
                 std::cout << elements[i] << " ";
             }
@@ -109,7 +113,7 @@ namespace mainset {
             Set result;
             for (int i = 0; i < size; i++) {
                 if (other.IsContained(elements[i])) {
-                    result.add(elements[i]);
+                    result.AddElement(elements[i]);
                 }
             }
             return result;
@@ -148,6 +152,15 @@ namespace mainset {
             return result;
         }
 
+        template <typename U>
+        bool IsAllElementsInSet(Set<U>& other) {
+            for (int i = 0; i < size; i++) {
+                if (!other.IsContained(elements[i]))
+                    return false;
+            }
+            return true;
+        }
+
         Set<T> RepeatElementsInSet() const { // В заданном массиве найти все повторяющиеся числа.
             Set result;
             for (int i = 0; i < size; i++) {
@@ -160,23 +173,29 @@ namespace mainset {
             return result;
         }
 
-        bool IsSubset(const Set& other) const {
-            for (int i = 0; i < size; i++) {
-                if (!other.IsContained(elements[i])) {
-                    return false;
+        bool IsRelation(const Set& other, const std::string& relation) const;
+        bool Set::IsRelation(const Set& other, const std::string& relation) const {
+            if (relation == "subset") {
+                for (int i = 0; i < size; i++) {
+                    if (!other.IsContained(elements[i])) {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return true;
+            else if (relation == "superset") {
+                return other.IsRelation(*this, "subset");
+            }
+            else {
+                return false;
+            }
         }
-        bool IsSuperset(const Set& other) const {
-            return other.IsSubset(*this);
-        }
+        
 
     };
 
-    std::ostream& operator<<(std::ostream& os, const std::pair<int, double>& pair) {
-        os << "(" << pair.first << ", " << pair.second << ")";
-        return os;
-    }
+
+
+
 }
 
